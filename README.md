@@ -52,4 +52,4 @@
   jest
 
   ## Contact:
-  Holler at me! <a href="mailto:rob.atalla@gmail.com">rob.atalla@gmail.com</a>
+  Holler at me! <a href="mailto:rob.atalla@robatalla816.com">rob.atalla@robatalla816.com</a>
