@@ -1,0 +1,20 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "![badge](https://img.shields.io/github/languages/top/ratalla816/employee-tracker)\r   <br> \r   ![badge](https://img.shields.io/github/languages/count/ratalla816/employee-tracker)\r   <br>\r   ![badge](https://img.shields.io/github/issues/ratalla816/employee-tracker)\r   <br>\r   ![badge](https://img.shields.io/github/issues-closed/ratalla816/employee-tracker)\r   <br>\r   ![badge](https://img.shields.io/github/last-commit/ratalla816/employee-tracker)\r   <br>\r   ![badge](https://img.shields.io/badge/license-MIT-important)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ratalla816/employee-tracker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ratalla816/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/ratalla816/employee-tracker#readme"
+}
