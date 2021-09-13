@@ -3,9 +3,9 @@ const router = express.Router();
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
-router.get('/voters', (req, res) => {
+router.get('/roles', (req, res) => {
     // data returned in alphabetical order by last name.
-    const sql = `SELECT * FROM voters ORDER BY last_name`;
+    const sql = `SELECT * FROM roles ORDER BY last_name`;
   
     db.query(sql, (err, rows) => {
       if (err) {
@@ -19,9 +19,9 @@ router.get('/voters', (req, res) => {
     });
   });
 
-  // Get single voter
-router.get('/voter/:id', (req, res) => {
-    const sql = `SELECT * FROM voters WHERE id = ?`;
+  // Get single role
+router.get('/role/:id', (req, res) => {
+    const sql = `SELECT * FROM roles WHERE id = ?`;
     const params = [req.params.id];
   
     db.query(sql, params, (err, row) => {
@@ -36,16 +36,16 @@ router.get('/voter/:id', (req, res) => {
     });
   });
 
-  router.post('/voter', ({ body }, res) => {
+  router.post('/role', ({ body }, res) => {
      // Data validation
-const errors = inputCheck(body, 'first_name', 'last_name', 'email');
+const errors = inputCheck(body, 'first_name', 'last_name', 'manager_id', 'division_id');
 if (errors) {
   res.status(400).json({ error: errors });
   return;
 }
 //   The ? prepared statements will protect us from malicious data
-    const sql = `INSERT INTO voters (first_name, last_name, email) VALUES (?,?,?)`;
-    const params = [body.first_name, body.last_name, body.email];
+    const sql = `INSERT INTO roles (first_name, last_name, manager_id, division_id) VALUES (?,?,?)`;
+    const params = [body.first_name, body.last_name, body.manager_id, body.division_id];
   
     db.query(sql, params, (err, result) => {
       if (err) {
@@ -59,24 +59,24 @@ if (errors) {
     });
   });
 
-//   update email
-  router.put('/voter/:id', (req, res) => {
+//   update manager
+  router.put('/manager/:id', (req, res) => {
     // Data validation
-    const errors = inputCheck(req.body, 'email');
+    const errors = inputCheck(req.body, 'manager');
     if (errors) {
       res.status(400).json({ error: errors });
       return;
     }
   
-    const sql = `UPDATE voters SET email = ? WHERE id = ?`;
-    const params = [req.body.email, req.params.id];
+    const sql = `UPDATE roles SET email = ? WHERE id = ?`;
+    const params = [req.body.manager, req.params.id];
   
     db.query(sql, params, (err, result) => {
       if (err) {
         res.status(400).json({ error: err.message });
       } else if (!result.affectedRows) {
         res.json({
-          message: 'Voter not found'
+          message: 'role not found'
         });
       } else {
         res.json({
@@ -88,16 +88,16 @@ if (errors) {
     });
   });
 
-//   delete voter
-  router.delete('/voter/:id', (req, res) => {
-    const sql = `DELETE FROM voters WHERE id = ?`;
+//   delete role
+  router.delete('/role/:id', (req, res) => {
+    const sql = `DELETE FROM roles WHERE id = ?`;
   
     db.query(sql, req.params.id, (err, result) => {
       if (err) {
         res.status(400).json({ error: res.message });
       } else if (!result.affectedRows) {
         res.json({
-          message: 'Voter not found'
+          message: 'role not found'
         });
       } else {
         res.json({

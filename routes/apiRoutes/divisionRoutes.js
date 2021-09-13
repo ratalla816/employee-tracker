@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
 
-// GET all parties
-router.get('/parties', (req, res) => {
-    const sql = `SELECT * FROM parties`;
+// GET all divisions
+router.get('/divisions', (req, res) => {
+    const sql = `SELECT * FROM divisions`;
     db.query(sql, (err, rows) => {
       if (err) {
         res.status(500).json({ error: err.message });
@@ -17,9 +17,9 @@ router.get('/parties', (req, res) => {
     });
   });
 
-  // GET a single party
-  router.get('/party/:id', (req, res) => {
-    const sql = `SELECT * FROM parties WHERE id = ?`;
+  // GET a single division
+  router.get('/division/:id', (req, res) => {
+    const sql = `SELECT * FROM divisions WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, row) => {
       if (err) {
@@ -33,11 +33,11 @@ router.get('/parties', (req, res) => {
     });
   });
 
-  //   Delete parties
+  //   Delete divisions
 //   Building a delete route will give us an opportunity to test the ON DELETE SET NULL constraint effect through the API.
 //   Because the intention of this route is to remove a row from the table, we should use app.delete() instead of app.get().
-router.delete('/party/:id', (req, res) => {
-    const sql = `DELETE FROM parties WHERE id = ?`;
+router.delete('/division/:id', (req, res) => {
+    const sql = `DELETE FROM divisions WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, result) => {
       if (err) {
@@ -45,7 +45,7 @@ router.delete('/party/:id', (req, res) => {
         // checks if anything was deleted
       } else if (!result.affectedRows) {
         res.json({
-          message: 'Party not found'
+          message: 'Division not found'
         });
       } else {
         res.json({
