@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS election;
-CREATE DATABASE election;
-USE election;
+DROP DATABASE IF EXISTS employeedb;
+CREATE DATABASE employeedb;
+USE employeedb;
 
 
