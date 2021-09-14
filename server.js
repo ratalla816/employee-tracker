@@ -1,38 +1,11 @@
 const mysql = require('mysql2');
 
-// const express = require('express');
-
-// const db = require('./db/connection');
 
 const inquirer = require('inquirer');
 
-// const apiRoutes = require('./routes/apiRoutes');
 
 const PORT = process.env.PORT || 3001;
-const app = express();
 
-// Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
-
-// // Use apiRoutes
-// app.use('/api', apiRoutes);
- 
-// // Default response for any other request (Not Found)
-// app.use((req, res) => {
-//   res.status(404).end();
-// });
-
-// // Start server after DB connection
-// db.connect(err => {
-//     if (err) throw err;
-//     console.log('Database connected.');
-//     app.listen(PORT, () => {
-//       console.log(`Server running on port ${PORT}`);
-//     });
-//   });
-
-  // --------------------------------------------------------- //
 
   // pulled from connection.js
   
@@ -49,17 +22,25 @@ const db = mysql.createConnection(
     console.log('Connected to the employee database.')
   );
 
+ 
+  // inquirer stuff goes here //
+
+ 
+ 
+ 
+ 
+ 
   // --------------------------------------------------------- //
 // pulled from the apiRoute files
 
-  // division routes //
+  // department routes //
 //   const express = require('express');
 // const router = express.Router();
 // const db = require('../../db/connection');
 
-// GET all divisions //
-router.get('/divisions', (req, res) => {
-    const sql = `SELECT * FROM divisions`;
+// GET all department //
+router.get('/department', (req, res) => {
+    const sql = `SELECT * FROM department`;
     db.query(sql, (err, rows) => {
       if (err) {
         res.status(500).json({ error: err.message });
@@ -72,9 +53,9 @@ router.get('/divisions', (req, res) => {
     });
   });
 
-  // GET a single division
-  router.get('/division/:id', (req, res) => {
-    const sql = `SELECT * FROM divisions WHERE id = ?`;
+  // GET a single department
+  router.get('/department/:id', (req, res) => {
+    const sql = `SELECT * FROM department WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, row) => {
       if (err) {
@@ -88,11 +69,11 @@ router.get('/divisions', (req, res) => {
     });
   });
 
-  //   Delete divisions
+  //   Delete department
 //   Building a delete route will give us an opportunity to test the ON DELETE SET NULL constraint effect through the API.
 //   Because the intention of this route is to remove a row from the table, we should use app.delete() instead of app.get().
-router.delete('/division/:id', (req, res) => {
-    const sql = `DELETE FROM divisions WHERE id = ?`;
+router.delete('/department/:id', (req, res) => {
+    const sql = `DELETE FROM department WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, result) => {
       if (err) {
@@ -100,7 +81,7 @@ router.delete('/division/:id', (req, res) => {
         // checks if anything was deleted
       } else if (!result.affectedRows) {
         res.json({
-          message: 'Division not found'
+          message: 'department not found'
         });
       } else {
         res.json({
@@ -113,23 +94,23 @@ router.delete('/division/:id', (req, res) => {
   });
 
   module.exports = router;
-  // end division routes //
+  // end department routes //
 
   // employee routes //
 
-  const express = require('express');
-const router = express.Router();
+  
+
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
   // GET all the employees
   // originally app.get('/api/employees')
   router.get('/employees', (req, res) => {
-    const sql = `SELECT employees.*, divisions.name 
-             AS division_name 
+    const sql = `SELECT employees.*, department.name 
+             AS department_name 
              FROM employees 
-             LEFT JOIN divisions 
-             ON employees.division_id = divisions.id`;
+             LEFT JOIN department 
+             ON employees.department_id = department.id`;
     
 db.query(sql, (err, rows) => {
         if(err){
@@ -146,12 +127,12 @@ db.query(sql, (err, rows) => {
 // GET a single employee
 // originally app.get('/api/employee/:id')
 router.get('/employee/:id', (req, res) => {
-    const sql = `SELECT employees.*, divisions.name 
-             AS division_name 
+    const sql = `SELECT employees.*, department.name 
+             AS department_name 
              FROM employees 
-             LEFT JOIN divisions 
-             ON employees.division_id = divisions.id 
-             WHERE divisions.id = ?`;
+             LEFT JOIN department 
+             ON employees.department_id = department.id 
+             WHERE department.id = ?`;
 // Note that we were still able to use a WHERE clause with a JOIN, but we had to place it at the end of the statement
     const params = [req.params.id];
   
@@ -231,19 +212,19 @@ db.query(sql, params, (err, result) => {
   });
 });
 
-// Update an employee's division
+// Update an employee's department
 // originally app.put('/api/employee/:id')
 router.put('/employee/:id', (req, res) => {
-    // employee is allowed to not have division affiliation
-    const errors = inputCheck(req.body, 'division_id');
+    // employee is allowed to not have department affiliation
+    const errors = inputCheck(req.body, 'department_id');
     if (errors) {
       res.status(400).json({ error: errors });
       return;
     }
   
-    const sql = `UPDATE employees SET division_id = ? 
+    const sql = `UPDATE employees SET department_id = ? 
                  WHERE id = ?`;
-    const params = [req.body.division_id, req.params.id];
+    const params = [req.body.department_id, req.params.id];
     db.query(sql, params, (err, result) => {
       if (err) {
         res.status(400).json({ error: err.message });
@@ -269,18 +250,18 @@ router.put('/employee/:id', (req, res) => {
   // manager routes //
 
   // const express = require('express');
-const router = express.Router();
+
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
   // GET all the managers
   // originally app.get('/api/managers')
   router.get('/managers', (req, res) => {
-    const sql = `SELECT managers.*, divisions.name 
-             AS division_name 
+    const sql = `SELECT managers.*, department.name 
+             AS department_name 
              FROM managers 
-             LEFT JOIN divisions 
-             ON managers.division_id = divisions.id`;
+             LEFT JOIN department 
+             ON managers.department_id = department.id`;
     
 db.query(sql, (err, rows) => {
         if(err){
@@ -297,11 +278,11 @@ db.query(sql, (err, rows) => {
 // GET a single manager
 // originally app.get('/api/manager/:id')
 router.get('/manager/:id', (req, res) => {
-    const sql = `SELECT managers.*, divisions.name 
-             AS division_name 
+    const sql = `SELECT managers.*, department.name 
+             AS department_name 
              FROM managers 
-             LEFT JOIN divisions 
-             ON managers.division_id = divisions.id 
+             LEFT JOIN department 
+             ON managers.department_id = department.id 
              WHERE managers.id = ?`;
 // Note that we were still able to use a WHERE clause with a JOIN, but we had to place it at the end of the statement
     const params = [req.params.id];
@@ -354,8 +335,8 @@ router.delete('/manager/:id', (req, res) => {
     const errors = inputCheck(
       body,
       'first_name',
-      'last_name',
-      'industry_connected'
+      'last_name'
+      
     );
     if (errors) {
       res.status(400).json({ error: errors });
@@ -381,19 +362,19 @@ db.query(sql, params, (err, result) => {
   });
 });
 
-// Update a manager's division
+// Update a manager's department
 // originally app.put('/api/manager/:id')
 router.put('/manager/:id', (req, res) => {
-    // manager is allowed to not have division affiliation
-    const errors = inputCheck(req.body, 'division_id');
+    // manager is allowed to not have department affiliation
+    const errors = inputCheck(req.body, 'department_id');
     if (errors) {
       res.status(400).json({ error: errors });
       return;
     }
   
-    const sql = `UPDATE managers SET division_id = ? 
+    const sql = `UPDATE managers SET department_id = ? 
                  WHERE id = ?`;
-    const params = [req.body.division_id, req.params.id];
+    const params = [req.body.department_id, req.params.id];
     db.query(sql, params, (err, result) => {
       if (err) {
         res.status(400).json({ error: err.message });
@@ -418,8 +399,7 @@ router.put('/manager/:id', (req, res) => {
 
   // role routes //
 
-  const express = require('express');
-const router = express.Router();
+ 
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
@@ -458,14 +438,14 @@ router.get('/role/:id', (req, res) => {
 
   router.post('/role', ({ body }, res) => {
      // Data validation
-const errors = inputCheck(body, 'first_name', 'last_name', 'manager_id', 'division_id');
+const errors = inputCheck(body, 'first_name', 'last_name', 'manager_id', 'department_id');
 if (errors) {
   res.status(400).json({ error: errors });
   return;
 }
 //   The ? prepared statements will protect us from malicious data
-    const sql = `INSERT INTO roles (first_name, last_name, manager_id, division_id) VALUES (?,?,?)`;
-    const params = [body.first_name, body.last_name, body.manager_id, body.division_id];
+    const sql = `INSERT INTO roles (first_name, last_name, manager_id, department_id) VALUES (?,?,?)`;
+    const params = [body.first_name, body.last_name, body.manager_id, body.department_id];
   
     db.query(sql, params, (err, result) => {
       if (err) {
@@ -488,7 +468,7 @@ if (errors) {
       return;
     }
   
-    const sql = `UPDATE roles SET email = ? WHERE id = ?`;
+    const sql = `UPDATE roles SET department = ? WHERE id = ?`;
     const params = [req.body.manager, req.params.id];
   
     db.query(sql, params, (err, result) => {
