@@ -1,13 +1,12 @@
-const mysql = require('mysql2');
-
-
 const inquirer = require('inquirer');
 
+const mysql = require('mysql2');
+
+const db = require('employee_db')
+
+const fs = require("fs");
 
 const PORT = process.env.PORT || 3001;
-
-
-  // pulled from connection.js
   
 // Connect to database
 const db = mysql.createConnection(
@@ -25,9 +24,7 @@ const db = mysql.createConnection(
  
   // inquirer stuff goes here // -------------------------- //
 
-//  team-profile-generator code --
-
- // array of questions for user input*
+  // array of questions for user input*
  const managerPrompts = [
    {
       type: "input",
@@ -74,8 +71,7 @@ const db = mysql.createConnection(
   const employArray = [];
   
       
-  // CREDIT: Nathan Szurek (Tutor), Calvin Freese (TA), Kelsey Gasser (TA) Brian Wilde (Classmate)
-      const buildManager = () => {
+       const buildManager = () => {
        return inquirer.prompt(managerPrompts)
       .then((prompts) => {
           const manager = new Manager(prompts.first_name, prompts.last_name, prompts.department_id, prompts.employee(id), prompts.roles_id);
@@ -90,61 +86,60 @@ const db = mysql.createConnection(
       
       return inquirer.prompt ([
           {
+             type: 'input',
+             name: 'first_name',
+             message: "Please enter the employee's first name", 
+          },
+      
+          {
+             type: 'input',
+             name: 'last_name',
+             message: "Please enter the employee's last name", 
+          },
+      
+          {
               type: 'list',
-              name: 'role',
+              name: 'roles_id',
               message: "Please select their role",
-              choices: ['Engineer', 'Intern']
+              choices: ['accountexec', 'scientist', 'accountant', 'engineer', 'attorney', 'recruiter']
           },
+           
           {
               type: 'input',
-              name: 'name',
-              message: "Please enter the employee's full name", 
-          },
-  
-          {
-              type: 'input',
-              name: 'id',
-              message: "Please enter their employee ID.",
-          },
-  
-          {
-              type: 'input',
-              name: 'email',
-              message: "Please enter the employee's email address.",
-          },
-  
-          {
-              type: 'input',
-              name: 'github',
-              message: "Please enter their Github username.",
-              when: (input) => input.role === "Engineer",
-          },
-          
-          {
-              type: 'input',
-              name: 'school',
-              message: "What school is the intern attending?",
-              when: (input) => input.role === "Intern",
+              name: 'manager_id',
+              message: "Please enter their manager's ID (if unknown, enter 0).",
           },
   
           {
               type: 'confirm',
               name: 'buildEmployeeConfirm',
-              message: 'Add another teammate?',
+              message: 'Enter another employee?',
           }
       ])
       .then(userInput => {
           // Selects the data sets for each employee class
   
-          let { name, id, email, role, github, school, buildEmployeeConfirm } = userInput; 
+          let { first_name, last_name, roles_id, manager_id, buildEmployeeConfirm } = userInput; 
           let employee; 
   
-          if (role === "Engineer") {
-              employee = new Engineer (name, id, email, github);
+          if (roles_id === "accountexec") {
+              employee = new Engineer (first_name, last_name, roles_id, manager_id);
   
-           } else if (role === "Intern") {
-              employee = new Intern (name, id, email, school);
-          }
+           } else if (roles_id === "scientist") {
+              employee = new Intern (first_name, last_name, roles_id, manager_id);
+
+           } else if (roles_id === "accountant") {
+              employee = new Intern (first_name, last_name, roles_id, manager_id);  
+
+           } else if (roles_id === "engineer") {
+              employee = new Intern (first_name, last_name, roles_id, manager_id);  
+              
+           } else if (roles_id === "attorney") {
+              employee = new Intern (first_name, last_name, roles_id, manager_id);   
+
+           } else if (roles_id === "recruiter") {
+              employee = new Intern (first_name, last_name, roles_id, manager_id);  
+           }
           // pushes newly built employee to employArray
           employArray.push(employee); 
   
@@ -156,16 +151,19 @@ const db = mysql.createConnection(
       })
   
   };
+
+
   
   
-  // If user chooses not to buildEmployee then index file is written 
-  const writeFile = data => {
-      fs.writeFile('./dist/index.html', data, err => {
+  // If user chooses not to buildEmployee then data is pushed to DB 
+  const sql = data => {
+    const params = [req.params.id];
+      fs.post('/employee/:id', data, err => {
             if (err) {
               console.log(err);
               return;
           } else {
-              console.log("Check out your spiffy new index.html file!")
+              console.log('Updated database, result "OK"')
           }
       })
   }; 
@@ -175,11 +173,11 @@ const db = mysql.createConnection(
     .then(buildEmployee)
     .then(employArray => {
   // callback to execute when the Promise is rejected.      
-      return generateHTML(employArray);
+      return renderDB(employArray);
     })
     .then(finalHTML => {
    // Promise for the completion of which ever callback is executed     
-      return writeFile(finalHTML);
+      return updateDB(finalDB);
     })
     .catch(err => {
    console.log(err);
@@ -190,15 +188,15 @@ const db = mysql.createConnection(
  
  
   // --------------------------------------------------------- //
-// pulled from the apiRoute files
+// pulled from the apiRoute files I deleted earlier
 
   // department routes //
 //   const express = require('express');
-// const router = express.Router();
+// const app = express.app();
 // const db = require('../../db/connection');
 
 // GET all department //
-router.get('/department', (req, res) => {
+app.get('/department', (req, res) => {
     const sql = `SELECT * FROM department`;
     db.query(sql, (err, rows) => {
       if (err) {
@@ -213,7 +211,7 @@ router.get('/department', (req, res) => {
   });
 
   // GET a single department
-  router.get('/department/:id', (req, res) => {
+  app.get('/department/:id', (req, res) => {
     const sql = `SELECT * FROM department WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, row) => {
@@ -231,7 +229,7 @@ router.get('/department', (req, res) => {
   //   Delete department
 //   Building a delete route will give us an opportunity to test the ON DELETE SET NULL constraint effect through the API.
 //   Because the intention of this route is to remove a row from the table, we should use app.delete() instead of app.get().
-router.delete('/department/:id', (req, res) => {
+app.delete('/department/:id', (req, res) => {
     const sql = `DELETE FROM department WHERE id = ?`;
     const params = [req.params.id];
     db.query(sql, params, (err, result) => {
@@ -252,19 +250,19 @@ router.delete('/department/:id', (req, res) => {
     });
   });
 
-  module.exports = router;
+  module.exports = app;
   // end department routes //
 
   // employee routes //
 
   
 
-const db = require('../../db/connection');
+// const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
   // GET all the employees
   // originally app.get('/api/employees')
-  router.get('/employees', (req, res) => {
+  app.get('/employees', (req, res) => {
     const sql = `SELECT employees.*, department.name 
              AS department_name 
              FROM employees 
@@ -285,7 +283,7 @@ db.query(sql, (err, rows) => {
 
 // GET a single employee
 // originally app.get('/api/employee/:id')
-router.get('/employee/:id', (req, res) => {
+app.get('/employee/:id', (req, res) => {
     const sql = `SELECT employees.*, department.name 
              AS department_name 
              FROM employees 
@@ -311,7 +309,7 @@ router.get('/employee/:id', (req, res) => {
   // Delete an employee
 //   The endpoint used here also includes a route parameter to uniquely identify the employee to remove. 
 // originally app.delete('/api/employee/:id')
-router.delete('/employee/:id', (req, res) => {
+app.delete('/employee/:id', (req, res) => {
     const sql = `DELETE FROM employees WHERE id = ?`;
 //   we're using a prepared SQL statement with a placeholder. We'll assign the req.params.id to params 
     const params = [req.params.id];
@@ -339,7 +337,7 @@ router.delete('/employee/:id', (req, res) => {
 
   // Create an Employee
   // originally app.post('/api/employee')
-  router.post('/employee', ({ body }, res) => {
+  app.post('/employee', ({ body }, res) => {
     const errors = inputCheck(
       body,
       'first_name',
@@ -373,7 +371,7 @@ db.query(sql, params, (err, result) => {
 
 // Update an employee's department
 // originally app.put('/api/employee/:id')
-router.put('/employee/:id', (req, res) => {
+app.put('/employee/:id', (req, res) => {
     // employee is allowed to not have department affiliation
     const errors = inputCheck(req.body, 'department_id');
     if (errors) {
@@ -402,7 +400,7 @@ router.put('/employee/:id', (req, res) => {
     });
   });
 
-  module.exports = router;
+  module.exports = app;
 
   // end of employee routes //
 
@@ -410,12 +408,13 @@ router.put('/employee/:id', (req, res) => {
 
   // const express = require('express');
 
-const db = require('../../db/connection');
+// const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
   // GET all the managers
   // originally app.get('/api/managers')
-  router.get('/managers', (req, res) => {
+  function something ()
+  app.get('/managers', (req, res) => {
     const sql = `SELECT managers.*, department.name 
              AS department_name 
              FROM managers 
@@ -436,7 +435,8 @@ db.query(sql, (err, rows) => {
 
 // GET a single manager
 // originally app.get('/api/manager/:id')
-router.get('/manager/:id', (req, res) => {
+function something ()
+app.get('/manager/:id', (req, res) => {
     const sql = `SELECT managers.*, department.name 
              AS department_name 
              FROM managers 
@@ -462,7 +462,8 @@ router.get('/manager/:id', (req, res) => {
   // Delete a manager
 //   The endpoint used here also includes a route parameter to uniquely identify the manager to remove. 
 // originally app.delete('/api/manager/:id')
-router.delete('/manager/:id', (req, res) => {
+function something ()
+app.delete('/manager/:id', (req, res) => {
     const sql = `DELETE FROM managers WHERE id = ?`;
 //   we're using a prepared SQL statement with a placeholder. We'll assign the req.params.id to params 
     const params = [req.params.id];
@@ -490,7 +491,8 @@ router.delete('/manager/:id', (req, res) => {
 
   // Create a manager
   // originally app.post('/api/manager')
-  router.post('/manager', ({ body }, res) => {
+  function something ()
+  app.post('/manager', ({ body }, res) => {
     const errors = inputCheck(
       body,
       'first_name',
@@ -523,7 +525,8 @@ db.query(sql, params, (err, result) => {
 
 // Update a manager's department
 // originally app.put('/api/manager/:id')
-router.put('/manager/:id', (req, res) => {
+function something ()
+app.put('/manager/:id', (req, res) => {
     // manager is allowed to not have department affiliation
     const errors = inputCheck(req.body, 'department_id');
     if (errors) {
@@ -552,7 +555,7 @@ router.put('/manager/:id', (req, res) => {
     });
   });
 
-  module.exports = router;
+  module.exports = app;
 
   // end of manager routes //
 
@@ -562,7 +565,7 @@ router.put('/manager/:id', (req, res) => {
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
 
-router.get('/roles', (req, res) => {
+app.get('/roles', (req, res) => {
     // data returned in alphabetical order by last name.
     const sql = `SELECT * FROM roles ORDER BY last_name`;
   
@@ -579,7 +582,7 @@ router.get('/roles', (req, res) => {
   });
 
   // Get single role
-router.get('/role/:id', (req, res) => {
+app.get('/role/:id', (req, res) => {
     const sql = `SELECT * FROM roles WHERE id = ?`;
     const params = [req.params.id];
   
@@ -595,7 +598,7 @@ router.get('/role/:id', (req, res) => {
     });
   });
 
-  router.post('/role', ({ body }, res) => {
+  app.post('/role', ({ body }, res) => {
      // Data validation
 const errors = inputCheck(body, 'first_name', 'last_name', 'manager_id', 'department_id');
 if (errors) {
@@ -619,7 +622,7 @@ if (errors) {
   });
 
 //   update manager
-  router.put('/manager/:id', (req, res) => {
+  app.put('/manager/:id', (req, res) => {
     // Data validation
     const errors = inputCheck(req.body, 'manager');
     if (errors) {
@@ -648,7 +651,7 @@ if (errors) {
   });
 
 //   delete role
-  router.delete('/role/:id', (req, res) => {
+  app.delete('/role/:id', (req, res) => {
     const sql = `DELETE FROM roles WHERE id = ?`;
   
     db.query(sql, req.params.id, (err, result) => {
@@ -668,11 +671,67 @@ if (errors) {
     });
   });
 
-  module.exports = router;
+  module.exports = app;
 
   // end of role routes //
 
+  generateDB = (data) => {
+
+    profileArray = []; 
+
+    for (let i = 0; i < data.length; i++) {
+        const employee = data[i];
+        const role = employee.getRole(); 
+
+        if (roles === 'manager') {
+            const managerProfile = createManager(employee);
+            profileArray.push(employeesTable);
+        }
+
+        if (role === 'accountexec') {
+            const engineerProfile = createEngineer(employee);
+            profileArray.push(employeesTable);
+        }
+
+        if (role === 'scientist') {
+            const internProfile = createIntern(employee);
+            profileArray.push(employeesTable);
+        }
+
+        if (role === 'accountant') {
+          const internProfile = createIntern(employee);
+          profileArray.push(employeesTable);
+        }
+
+        if (role === 'engineer') {
+          const internProfile = createIntern(employee);
+          profileArray.push(employeesTable);
+        }
+
+        if (role === 'attorney') {
+          const internProfile = createIntern(employee);
+          profileArray.push(employeesTable);
+        }
+        
+        if (role === 'recruiter') {
+          const internProfile = createIntern(employee);
+          profileArray.push(employeesTable);
+        }
+    }
+
+    
+    // Records in the array are joined so the data can be rendered in the DB
+    const employeeRecords = profileArray.join('')
+
+    const renderEmployees = renderEmployeesTable(employeeRecords); 
+    return renderEmployees;
+
+}
+
+// creating the index file with all the teammembers' Records 
+const renderDB = function (employeeRecords) {   
+
+
   
-
-
-
+}
+module.exports = app;

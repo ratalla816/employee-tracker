@@ -15,7 +15,7 @@
   ("manager", 100000000, 1),
   ("accountexec", 90000, 2),
   ("scientist", 200000, 3),
-  ("beancounter", 20000, 4),
+  ("accountant", 20000, 4),
   ("engineer", 150000, 5),
   ("attorney", 150000, 6),
   ("recruiter", 40000, 7);
