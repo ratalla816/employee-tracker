@@ -1,6 +1,6 @@
  
  
- INSERT INTO division (name)
+ INSERT INTO department (name)
  VALUES
   ("executive"),
   ("sales"),
@@ -10,7 +10,7 @@
   ("compliance"),
   ("hr");
 
- INSERT INTO roles (title, salary, division_id)
+ INSERT INTO roles (title, salary, department_id)
  VALUES
   ("ceo", 100000000, 1),
   ("accountexec", 90000, 2),
@@ -26,7 +26,7 @@
   ("Rob", "Atalla", 1, NULL),
   ("Jack", "London", 2, NULL),
   ("Robert", "Bruce", 3, NULL),
-  ("Peter", "Greenaway", 4, NULL)
+  ("Peter", "Greenaway", 4, NULL),
   ("Chip", "Chipperson", 5, NULL),
   ("Ted", "Scheckler", 6, NULL),
   ("Greg", "Hughes", 7, NULL);
