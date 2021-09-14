@@ -1,6 +1,8 @@
- const express = require('express');
+const mysql = require('mysql2');
 
-const db = require('./db/connection');
+// const express = require('express');
+
+// const db = require('./db/connection');
 
 const inquirer = require('inquirer');
 
@@ -33,8 +35,7 @@ db.connect(err => {
   // --------------------------------------------------------- //
 
   // pulled from connection.js
-  const mysql = require('mysql2');
-
+  
 // Connect to database
 const db = mysql.createConnection(
     {
@@ -52,11 +53,11 @@ const db = mysql.createConnection(
 // pulled from the apiRoute files
 
   // division routes //
-  const express = require('express');
-const router = express.Router();
-const db = require('../../db/connection');
+//   const express = require('express');
+// const router = express.Router();
+// const db = require('../../db/connection');
 
-// GET all divisions
+// GET all divisions //
 router.get('/divisions', (req, res) => {
     const sql = `SELECT * FROM divisions`;
     db.query(sql, (err, rows) => {
