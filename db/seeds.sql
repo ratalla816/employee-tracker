@@ -12,7 +12,7 @@
 
  INSERT INTO roles (title, salary, department_id)
  VALUES
-  ("ceo", 100000000, 1),
+  ("manager", 100000000, 1),
   ("accountexec", 90000, 2),
   ("scientist", 200000, 3),
   ("beancounter", 20000, 4),
