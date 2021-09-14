@@ -1,32 +1,37 @@
- USE employee_db;
  
  
- INSERT INTO divisions (division)
-VALUES
-  ("csuite"),
+ INSERT INTO division (name)
+ VALUES
+  ("executive"),
   ("sales"),
   ("research"),
-  ("devops")
+  ("accounting"),
+  ("devops"),
+  ("compliance"),
+  ("hr");
 
  INSERT INTO roles (title, salary, division_id)
-VALUES
-  ("manager", 10000000,1),
-  ("employee", 200000,2),
-  ("employee", 200000,3),
-  ("employee", 200000,4)
+ VALUES
+  ("ceo", 100000000, 1),
+  ("accountexec", 90000, 2),
+  ("scientist", 200000, 3),
+  ("beancounter", 20000, 4),
+  ("engineer", 150000, 5),
+  ("attorney", 150000, 6),
+  ("recruiter", 40000, 7);
+ 
   
  INSERT INTO employees (first_name, last_name, roles_id, manager_id)
  VALUES
-  ("Rob", "Atalla",1,NULL),
-  ("Jack", "London",2,1),
-  ("Robert", "Bruce",3,1),
-  ("Peter", "Greenaway",4,1)
+  ("Rob", "Atalla", 1, NULL),
+  ("Jack", "London", 2, NULL),
+  ("Robert", "Bruce", 3, NULL),
+  ("Peter", "Greenaway", 4, NULL)
+  ("Chip", "Chipperson", 5, NULL),
+  ("Ted", "Scheckler", 6, NULL),
+  ("Greg", "Hughes", 7, NULL);
 
-  -- ("Rob", "Atalla"),
-  -- ("Jack", "London"),
-  -- ("Robert", "Bruce"),
-  -- ("Peter", "Greenaway")
-
+ 
   
 
 

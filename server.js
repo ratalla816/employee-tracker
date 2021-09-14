@@ -4,7 +4,7 @@ const db = require('./db/connection');
 
 const inquirer = require('inquirer');
 
-const apiRoutes = require('./routes/apiRoutes');
+// const apiRoutes = require('./routes/apiRoutes');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -248,7 +248,7 @@ router.put('/employee/:id', (req, res) => {
 
   // manager routes //
 
-  const express = require('express');
+  // const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
 const inputCheck = require('../../utils/inputCheck');
