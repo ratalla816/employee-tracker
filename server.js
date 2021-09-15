@@ -23,7 +23,7 @@ const db = mysql.createConnection(
 );
 
 // begin inquirer questions //
-// const beginPrompts = () => {
+const beginPrompts = () => {
   inquirer.prompt([
     {
       type: "list",
@@ -91,6 +91,7 @@ const db = mysql.createConnection(
         deleteEmployee();
 
       } else if (userInput === 'exit program') {
+      // connection.terminated() caused that weirdness at the top //
         return connection.terminated()
       };
       console.log('Dueces!')
@@ -99,65 +100,102 @@ const db = mysql.createConnection(
   }
     
     
-    // describeDepartments = () => {
+    describeDepartments = () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
+      }
 
-    //   }
+    describeRoles = () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // describeRoles = () => {
+    }
 
+    describeEmployees = () => {
+      console.log('something goes here');
+    // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // }
+    }
 
-    // describeEmployees = () => {
+    addDepartment = () => {
+      console.log('something goes here');
+    // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
+    }
 
-    // }
+    addRole = () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // addDepartment = () => {
+    }
 
+    addEmployee = () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // }
+    }
 
-    // addRole = () => {
+    editRole = () => {
+      console.log('something goes here');
+    // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
+    }
 
-    // }
+    editManager () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
+    }
 
-    // addEmployee = () => {
+    describeDeptEmp () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
+    }
 
-    // }
+    deleteDepartment () => {
+      console.log('something goes here');
+     // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // editRole = () => {
+    }
 
+    deleteRole () => {
+      console.log('something goes here');
+      // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // }
+    }
 
-    // editManager () => {
+    deleteEmployee () => {
+      console.log('something goes here');
+      // inquirer.prompt, const, (err), err, query, ETC.. //
+      console.table(results);
+      somethingGoesHereMaybe();
 
-    // }
+    }
 
-    // describeDeptEmp () => {
-
-
-    // }
-
-    // deleteDepartment () => {
-
-
-    // }
-
-    // deleteRole () => {
-
-
-    // }
-
-    // deleteEmployee () => {
-
-
-    // }
-
-
+    wrapUpThisMess();
+   }
 
 
 
@@ -185,13 +223,7 @@ const db = mysql.createConnection(
         //      } else if (roles_id === "recruiter") {
         //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
         //      }
-        //     // pushes newly built employee to employArray
-        //     employArray.push(employee); 
-
-        //     if (buildEmployeeConfirm) {
-        //         return buildEmployee(employArray); 
-        //     } else {
-        //         return employArray;
+        //     
         //     }
         // })
 
@@ -226,13 +258,6 @@ const db = mysql.createConnection(
       //   return renderDB(employArray);
       // })
 
-
-
-
-
-  // GET all department //
-
-
     // end of role routes //
     // Promise for the completion of which ever callback is executed     
 //     .then(finalDB => {
@@ -241,6 +266,6 @@ const db = mysql.createConnection(
 //     .catch(err => {
 //       console.log(err);
 //     });
-
+  
     
     
