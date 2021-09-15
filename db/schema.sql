@@ -16,7 +16,7 @@ USE atalla_corp_db;
   title VARCHAR(50),
   salary DECIMAL(11, 2),
   department_id INTEGER,
-  CONSTRAINT fk_department FOREIGN KEY(department_id) REFERENCES department(id)
+  FOREIGN KEY(department_id) REFERENCES department(id)
  );
  
   CREATE TABLE employees (
@@ -25,9 +25,13 @@ USE atalla_corp_db;
   last_name VARCHAR(50),
   roles_id INTEGER NOT NULL,
   manager_id INTEGER,
-  CONSTRAINT fk_roles FOREIGN KEY (roles_id) REFERENCES roles(id),
-  CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employees(id)
+  FOREIGN KEY (roles_id) REFERENCES roles(id),
+  FOREIGN KEY (manager_id) REFERENCES employees(id)
  );
+
+-- CONSTRAINT fk_department
+--  CONSTRAINT fk_roles
+--  CONSTRAINT fk_manager
 
 
 
