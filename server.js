@@ -64,13 +64,13 @@ const beginPrompts = () => {
         describeEmployees();
 
       } else if (userInput === 'add a department') {
-        insertDepartment();
+        addDepartment();
 
       } else if (userInput === 'add a new employee role') {
-        insertRole();
+        addRole();
 
       } else if (userInput === 'add a new employee') {
-        insertEmployee();
+        addEmployee();
 
       } else if (userInput === 'edit employee role') {
         editRole();
@@ -123,7 +123,7 @@ const beginPrompts = () => {
 
     }
 
-    insertDepartment = () => {
+    addDepartment = () => {
       console.log('something goes here');
     // inquirer.prompt, const, (err), err, query, ETC.. //
       console.table(results);
@@ -131,7 +131,7 @@ const beginPrompts = () => {
 
     }
 
-    insertRole = () => {
+    addRole = () => {
       console.log('something goes here');
      // inquirer.prompt, const, (err), err, query, ETC.. //
       console.table(results);
@@ -139,7 +139,7 @@ const beginPrompts = () => {
 
     }
 
-    insertEmployee = () => {
+    addEmployee = () => {
       console.log('something goes here');
      // inquirer.prompt, const, (err), err, query, ETC.. //
       console.table(results);
