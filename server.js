@@ -114,8 +114,7 @@ const beginPrompts = () => {
     })
   }
     
-    // using exact syntax from u-develop-it //
-
+    
   describeDepartments = () => {
     console.log('Displaying departments');
      const sql = `SELECT * FROM department`;
@@ -188,19 +187,19 @@ const beginPrompts = () => {
       
       connection.promise().query(sql, (err, data) => {
           if (err) throw err; 
-      const departmentID = data.map(({name, id}) => ({name: name, value: id}));
+      const department = data.map(({name, id}) => ({name: name, value: id}));
       inquirer.prompt([
         {
           type: 'list',
-          name: 'departmentID',
+          name: 'department',
           message: 'Which department number does this role fall under?',
-          choices: departmentID
+          choices: department
         }
       ])
 
       .then(selectDepartment => {
-        const departmentID = selectDepartment.departmentID;
-        params.push(departmentID);
+        const department = selectDepartment.department;
+        params.push(department);
        
         const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`;               
          db.query(sql, userInput.newRole, (err, results) => {
@@ -208,8 +207,8 @@ const beginPrompts = () => {
           console.log('role added');
           console.table(results)
       }); 
-     });
     });
+ });
 
   addEmployee = () => {
     inquirer.prompt([
@@ -223,6 +222,7 @@ const beginPrompts = () => {
         name: 'lastName',
         message: "Please enter employee's last name.",
       }
+     ])
 
       .then(userInput => {
         const params = [userInput.firstName, userInput.lastName];
@@ -249,9 +249,13 @@ const beginPrompts = () => {
            if (err) throw err;
             console.log('new employee added');
             console.table(results)
-         }); 
-       });
-      }); 
+        }); 
+      });
+    });
+  });
+  
+
+
 
     editEmployees = () => {
       const sql = `SELECT * FROM employees`;
@@ -289,15 +293,21 @@ const beginPrompts = () => {
       .then(roleSelect => {
         const title = roleSelect.role;
         params.push(title);
-        
-        )
-      
-    
-    }
-    }
-      }
-    }
 
+        const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+        const params = [req.params.id];
+        db.query(sql, userInput.editEmployee, (err, results) => {
+          if (err) throw err;
+           console.log('Employee records updated');
+           console.table(results)
+        }); 
+      });
+    }); 
+  });  
+
+
+
+  
   
 
   // editManager () => {
@@ -338,8 +348,8 @@ const beginPrompts = () => {
   //   beginPrompts
   // }
 
-  // wrapUpThisMess();
-  // }
+  wrapUpThisMess();
+    
 
 
 
@@ -410,6 +420,4 @@ const beginPrompts = () => {
 //     .catch(err => {
 //       console.log(err);
 //     });
-  
-    
-    
+
