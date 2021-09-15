@@ -47,9 +47,8 @@ const beginPrompts = () => {
           'add a department',
           'add a new employee role',
           'add a new employee',
-          'edit employee role',
+          'view / edit employees',
           'view / edit managers',
-          'view employees in a specific department',
           'delete a department',
           'delete an employee role',
           'delete an employee',
@@ -59,8 +58,8 @@ const beginPrompts = () => {
  ])
     // end start menu //      
 
- .then((input) => {
-    const {choices} = input;
+ .then((userInput) => {
+    const {choices} = userInput;
 
     if (choices === 'view departments') {
        describeDepartments();
@@ -79,23 +78,19 @@ const beginPrompts = () => {
 
     } 
       if (choices === 'add a new employee role') {
-      addRole();
+      addRoles();
 
     } 
       if (choices === 'add a new employee') {
       addEmployee();
 
     } 
-      if (choices === 'edit employee role') {
-      editRole();
+     if (choices === 'view / edit employees') {
+      editEmployees();
 
     } 
       if (choices === 'view / edit managers') {
       editManager();
-
-    } 
-      if (choices === 'view employees in a specific department') {
-      describeDeptEmp();
 
     } 
       if (choices === 'delete a department') {
@@ -103,7 +98,7 @@ const beginPrompts = () => {
 
     } 
       if (choices === 'delete an employee role') {
-      deleteRole();
+      deleteRoles();
 
     } 
       if (choices === 'delete an employee') {
@@ -119,74 +114,204 @@ const beginPrompts = () => {
     })
   }
     
+    // using exact syntax from u-develop-it //
+
+  describeDepartments = () => {
+    console.log('Displaying departments');
+     const sql = `SELECT * FROM department`;
+     db.query(sql, (err, rows) => {
+      if (err) throw err;
+    console.table(results);
+    beginPrompts();
+  });
+}; 
+
+  describeRoles = () => {
+    console.log('Displaying current roles');
+    const sql = `SELECT * FROM roles ORDER BY roles.id`;
+    db.query(sql, (err, rows) => {
+      if (err) throw err;
+    console.table(results);
+    beginPrompts();
+  });
+ };
+
+  describeEmployees = () => {
+    console.log('Displaying active employees');
+    const sql = `SELECT employees.*, department.name 
+             AS department_name 
+             FROM employees 
+             LEFT JOIN department 
+             ON employees.department_id = department.id`;
+    db.query(sql, (err, rows) => {
+       if (err) throw err;
+    console.table(results);
+    beginPrompts();
+  }); 
+ };
+
+  addDepartment = () => {
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'newDepartment',
+        message: 'Please enter department name',
+      }
+    ])
+  .then(userInput => {
+      const sql = `INSERT INTO department (name) VALUES (?)`;               
+       db.query(sql, userInput.newDepartment, (err, results) => {
+       if (err) throw err;
+        console.log('department added')
+        console.table(results);
+     }); 
+   });
+  };
+  
+  addRoles = () => {
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'newRole',
+        message: 'Please enter title',
+      },
+      {
+        type: 'input',
+        name: 'salary',
+        message: 'Please enter annual salary',
+      }
+    ]) 
+
+      .then(userInput => {
+      const params = [userInput.newRole, userInput.salary];
+      const sql =  `SELECT name, id FROM department`;       
+      
+      connection.promise().query(sql, (err, data) => {
+          if (err) throw err; 
+      const departmentID = data.map(({name, id}) => ({name: name, value: id}));
+      inquirer.prompt([
+        {
+          type: 'list',
+          name: 'departmentID',
+          message: 'Which department number does this role fall under?',
+          choices: departmentID
+        }
+      ])
+
+      .then(selectDepartment => {
+        const departmentID = selectDepartment.departmentID;
+        params.push(departmentID);
+       
+        const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`;               
+         db.query(sql, userInput.newRole, (err, results) => {
+         if (err) throw err;
+          console.log('role added');
+          console.table(results)
+      }); 
+     });
+    });
+
+  addEmployee = () => {
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'firstName',
+        message: "Please enter employee's first name.",
+      },  
+      {
+        type: 'input',
+        name: 'lastName',
+        message: "Please enter employee's last name.",
+      }
+
+      .then(userInput => {
+        const params = [userInput.firstName, userInput.lastName];
+        const sql =  `SELECT roles.id, roles.title FROM roles`;       
+        
+        connection.promise().query(sql, (err, data) => {
+            if (err) throw err; 
+        const rolesID = data.map(({id, title}) => ({name: title, value: id}));
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'rolesID',
+            message: "What is the employee's title please?",
+            choices: rolesID
+          }
+        ])
+  
+        .then(selectRoles => {
+          const rolesID = selectRoles.rolesID;
+          params.push(rolesID);
+         
+          const sql = `INSERT INTO employees (first_name, last_name, roles_id) VALUES (?,?,?)`;               
+           db.query(sql, userInput.newRole, (err, results) => {
+           if (err) throw err;
+            console.log('new employee added');
+            console.table(results)
+         }); 
+       });
+      }); 
+
+    editEmployees = () => {
+      const sql = `SELECT * FROM employees`;
+
+      connection.promise().query(sql, (err, rows) => {
+        if (err) throw err;
+      const employees = data.map(({id, first_name, last_name}) => ({name: first_name + "" + last_name, value:id}));
+      inquirer.prompt([
+        {
+          type: 'list',
+          name: 'employeeName',
+          message: 'Which employee do you want to edit?',
+          choices: employees
+        }
+      ])  
+ 
+    .then(selectEmployee => {
+      const employee = selectEmployee.employeeName;
+      const params = [req.params.id]
+      params.push(employee);
+
+      const sql = `SELECT * FROM roles`;
+      connection.promise().query(sql, (err, data) => {
+        if (err) throw err;
+      const rolesID = data.map(({id, title}) => ({name: title, value: id}));
+      inquirer.prompt([
+        {
+          type: 'list',
+          name: 'title',
+          message: "Please enter employee's new title",
+          choices: rolesID
+        }
+      ])
+
+      .then(roleSelect => {
+        const title = roleSelect.role;
+        params.push(title);
+        
+        )
+      
     
-  // describeDepartments = () => {
-  //   console.log('something goes here');
-  //    // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-  // }
+    }
+    }
+      }
+    }
 
-  // describeRoles = () => {
-  //   console.log('something goes here');
-  //   // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-
-  // }
-
-  // describeEmployees = () => {
-  //   console.log('something goes here');
-  // // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-
-  // }
-
-  // addDepartment = () => {
-  //   console.log('something goes here');
-  // // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-
-  // }
-
-  // addRole = () => {
-  //   console.log('something goes here');
-  //   // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-
-  // }
-
-  // addEmployee = () => {
-  //   console.log('something goes here');
-  //  // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-
-  // }
-
-  // editRole = () => {
-  //   console.log('something goes here');
-  //   // inquirer.prompt, const, (err), err, query, ETC.. //
-  //   console.table(results);
-  //   somethingGoesHereMaybe();
-
-  // }
+  
 
   // editManager () => {
   //    console.log('something goes here');
   //    // inquirer.prompt, const, (err), err, query, ETC.. //
   //    console.table(results);
-  //    somethingGoesHereMaybe();
+  //    beginPrompts();
   // }
 
-  // describeDeptEmp () => {
+  // editEmployees () => {
   //   console.log('something goes here');
   //    // inquirer.prompt, const, (err), err, query, ETC.. //
   //   console.table(results);
-  //   somethingGoesHereMaybe();
+  //   beginPrompts();
 
   // }
 
@@ -194,7 +319,7 @@ const beginPrompts = () => {
   //   console.log('something goes here');
   //   // inquirer.prompt, const, (err), err, query, ETC.. //
   //   console.table(results);
-  //   somethingGoesHereMaybe();
+  //   beginPrompts();
 
   // }
 
@@ -202,7 +327,7 @@ const beginPrompts = () => {
   //   console.log('something goes here');
   //   // inquirer.prompt, const, (err), err, query, ETC.. //
   //   console.table(results);
-  //   somethingGoesHereMaybe();
+  //   beginPrompts();
 
   // }
 
@@ -210,8 +335,7 @@ const beginPrompts = () => {
   //   console.log('something goes here');
   //   // inquirer.prompt, const, (err), err, query, ETC.. //
   //   console.table(results);
-  //   somethingGoesHereMaybe();
-
+  //   beginPrompts
   // }
 
   // wrapUpThisMess();
