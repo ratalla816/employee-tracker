@@ -2,6 +2,10 @@ const inquirer = require('inquirer');
 
 const mysql = require('mysql2');
 
+// THIS MYSTERIOUSLY APPEARED - NO CLUE WHAT IT IS OR WHY ITS HERE //
+const Connection = require('mysql2/typings/mysql/lib/Connection');
+// ************************************* //
+
 const PORT = process.env.PORT || 3001;
   
 // Connect to database
@@ -17,8 +21,6 @@ const db = mysql.createConnection(
     console.log('Welcome to the Atalla Corporation Employee Database.')
     
   );
-
- 
   
   // begin inquirer questions //
  const beginPrompts = () => {
@@ -47,86 +49,116 @@ const db = mysql.createConnection(
   }    
   
 ]) 
-  
-}
-    // end of question array //      
+      // end of question array //      
    
     .then((userInput) => {
-       return inquirer.prompt(inquirerPrompts)
+       let (inquirer.prompt) = userInput;
                          
-       for (let i = 0; i < data.length; i++) {
-        const employee = data[i];
-        const role = employee.getRole(); 
-
-        if (roles === 'manager') {
-            const managerProfile = createManager(employee);
+      
+        if (userInput === 'view departments') {
+            
             profileArray.push(employeesTable);
-        }
-
-        if (role === 'accountexec') {
-            const engineerProfile = createEngineer(employee);
-            profileArray.push(employeesTable);
-        }
-
-        if (role === 'scientist') {
-            const internProfile = createIntern(employee);
-            profileArray.push(employeesTable);
-        }
-
-        if (role === 'accountant') {
-          const internProfile = createIntern(employee);
-          profileArray.push(employeesTable);
-        }
-
-        if (role === 'engineer') {
-          const internProfile = createIntern(employee);
-          profileArray.push(employeesTable);
-        }
-
-        if (role === 'attorney') {
-          const internProfile = createIntern(employee);
-          profileArray.push(employeesTable);
-        }
         
-        if (role === 'recruiter') {
-          const internProfile = createIntern(employee);
+
+      } else if (userInput === 'view a specific department') {
+            
+            profileArray.push(employeesTable);
+        
+
+      } else if (userInput === 'add a department') {
+           
+            profileArray.push(employeesTable);
+        
+
+      } else if (userInput === 'delete a department') {
+         
           profileArray.push(employeesTable);
-        }
+        
+
+      } else if (userInput === 'view existing employee roles') {
+          
+          profileArray.push(employeesTable);
+        
+
+      } else if (userInput === 'view a specific employee role') {
+         
+          profileArray.push(employeesTable);
+        
+        
+      } else if (userInput === 'add a new employee role') {
+          
+          profileArray.push(employeesTable);
+        
+
+      } else if (userInput === 'delete an employee role') {
+        
+          profileArray.push(employeesTable);
+       
+
+      } else if (userInput === 'view all employees') {
+         
+          profileArray.push(employeesTable);
+       
+
+      } else if (userInput === 'view a specific employee') {
+        
+          profileArray.push(employeesTable);
+       
+
+      } else if (userInput === 'add a new employee') {
+        
+        profileArray.push(employeesTable);
+       
+
+      } else if (userInput === 'delete an employee') {
+      
+        profileArray.push(employeesTable);
+       
+
+      } else if (userInput === 'view / edit managers') {
+       
+        profileArray.push(employeesTable);
+       
+      
+      } else if (userInput === 'exit program') {
+        return connection.terminated()
+       };
+    
     }
 
-      .then(userInput => {
-          // Selects the data sets for each employee class
+      // .then(userInput => {
+      //     // Selects the data sets for each employee class
   
-          let { first_name, last_name, roles_id, manager_id, buildEmployeeConfirm } = userInput; 
-          let employee; 
+      //     let { first_name, last_name, roles_id, manager_id, buildEmployeeConfirm } = userInput; 
+      //     let employee; 
   
-          if (roles_id === "accountexec") {
-              employee = new Engineer (first_name, last_name, roles_id, manager_id);
+      //     if (roles_id === "accountexec") {
+      //         employee = new Engineer (first_name, last_name, roles_id, manager_id);
   
-           } else if (roles_id === "scientist") {
-              employee = new Intern (first_name, last_name, roles_id, manager_id);
+      //      } else if (roles_id === "scientist") {
+      //         employee = new Intern (first_name, last_name, roles_id, manager_id);
 
-           } else if (roles_id === "accountant") {
-              employee = new Intern (first_name, last_name, roles_id, manager_id);  
+      //      } else if (roles_id === "accountant") {
+      //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
 
-           } else if (roles_id === "engineer") {
-              employee = new Intern (first_name, last_name, roles_id, manager_id);  
+      //      } else if (roles_id === "engineer") {
+      //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
               
-           } else if (roles_id === "attorney") {
-              employee = new Intern (first_name, last_name, roles_id, manager_id);   
+      //      } else if (roles_id === "attorney") {
+      //         employee = new Intern (first_name, last_name, roles_id, manager_id);   
 
-           } else if (roles_id === "recruiter") {
-              employee = new Intern (first_name, last_name, roles_id, manager_id);  
-           }
-          // pushes newly built employee to employArray
-          employArray.push(employee); 
+      //      } else if (roles_id === "recruiter") {
+      //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
+      //      }
+      //     // pushes newly built employee to employArray
+      //     employArray.push(employee); 
   
-          if (buildEmployeeConfirm) {
-              return buildEmployee(employArray); 
-          } else {
-              return employArray;
-          }
-      })
+      //     if (buildEmployeeConfirm) {
+      //         return buildEmployee(employArray); 
+      //     } else {
+      //         return employArray;
+      //     }
+      // })
   
   
 
@@ -134,36 +166,32 @@ const db = mysql.createConnection(
   
   
   // If user chooses not to buildEmployee then data is pushed to DB 
-  const sql = data => {
-    const params = [req.params.id];
-      fs.post('/employee/:id', data, err => {
-            if (err) {
-              console.log(err);
-              return;
-          } else {
-              console.log('Updated database, result "OK"')
-          }
-      })
-  }; 
+ 
+  // const sql = data => {
+  //   const params = [req.params.id];
+  //     fs.post('/employee/:id', data, err => {
+  //           if (err) {
+  //             console.log(err);
+  //             return;
+  //         } else {
+  //             console.log('Updated database, result "OK"')
+  //         }
+  //     })
+  // }; 
   
-  buildManager()
+  // buildManager()
+ 
   // callback to execute when the Promise is resolved.
-    .then(buildEmployee)
-    .then(employArray => {
-  // callback to execute when the Promise is rejected.      
-      return renderDB(employArray);
-    })
-    .then(finalDB => {
-   // Promise for the completion of which ever callback is executed     
-      return updateDB(finalDB);
-    })
-    .catch(err => {
-   console.log(err);
-    });
   
+  // .then(buildEmployee)
+  //   .then(employArray => {
  
- 
- 
+      // callback to execute when the Promise is rejected.      
+  
+    //   return renderDB(employArray);
+    // })
+
+     
  
  
 
@@ -171,9 +199,15 @@ const db = mysql.createConnection(
 
 
   // end of role routes //
-
+  // Promise for the completion of which ever callback is executed     
+  .then(finalDB => {
+      return updateDB(finalDB);
+    })
+    .catch(err => {
+   console.log(err);
+    });
   
-    
+  } 
    
 
 
@@ -181,5 +215,4 @@ const db = mysql.createConnection(
 
 
   
-}
-module.exports = app;
+
