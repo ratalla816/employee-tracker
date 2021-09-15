@@ -2,10 +2,6 @@ const inquirer = require('inquirer');
 
 const mysql = require('mysql2');
 
-// const db = require('employee_db')
-
-// const fs = require("fs");
-
 const PORT = process.env.PORT || 3001;
   
 // Connect to database
@@ -16,20 +12,27 @@ const db = mysql.createConnection(
       user: 'root',
       // Your MySQL password
       password: 'root',
-      database: 'employee_db'
+      database: 'atalla_corp_db'
     },
-    console.log('Connected to the employee database.')
+    console.log('Welcome to the Atalla Corporation Employee Database.')
+    
   );
 
  
   // inquirer stuff goes here // -------------------------- //
 
   // array of questions for user input*
- const managerPrompts = [
+ const beginPrompts = () => {
+   inquirer.prompt ([
    {
       type: "input",
       name: "first_name",
       message: "Please enter the manager's first name.",
+      choices: [
+          'view departments',
+          'view roles',
+          'view employees',
+      ]
   },    
 
   {
@@ -52,7 +55,7 @@ const db = mysql.createConnection(
         "hr"
       ],
   },
-      
+*** ]) ****
   {
       type: "input",
       name: "employee(id)",
@@ -64,7 +67,7 @@ const db = mysql.createConnection(
       name: "roles_id",
       message: "Please enter the manager's role id.",
   }
-  ]
+}
     
   // end of question array //
   
