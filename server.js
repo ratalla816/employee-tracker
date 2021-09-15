@@ -2,14 +2,10 @@ const inquirer = require('inquirer');
 
 const mysql = require('mysql2');
 
-// THIS MYSTERIOUSLY APPEARED - NO CLUE WHAT IT IS OR WHY ITS HERE //
-// const Connection = require('mysql2/typings/mysql/lib/Connection');
-// ************************************* //
-
 const PORT = process.env.PORT || 3001;
 
 // Connect to database
-const db = mysql.createConnection(
+const connection = mysql.createConnection(
   {
     host: 'localhost',
     // Your MySQL username,
@@ -17,18 +13,32 @@ const db = mysql.createConnection(
     // Your MySQL password
     password: 'root',
     database: 'atalla_corp_db'
-  },
-  console.log('Welcome to the Atalla Corporation Employee Database.')
-
+  }
+  
 );
 
-// begin inquirer questions //
+  // https://www.tabnine.com/code/javascript/functions/mysql/Connection/threadId //
+  connection.connect(function(err) {
+    if (err) {
+     console.error('error connecting: ' + err.stack);
+     return;
+    }
+    console.log('connected as id ' + connection.threadId);
+    initiateApp();
+  });
+
+  initiateApp = () => {
+    console.log('Welcome to the Atalla Corporation Employee Database')
+    beginPrompts();
+  };  
+
+// begin inquirer questions - start menu //
 const beginPrompts = () => {
   inquirer.prompt([
     {
-      type: "list",
-      name: "start",
-      message: "Please select an option.",
+      type: 'list',
+      name: 'start menu',
+      message: 'Please select an option.',
       choices:
         [
           'view departments',
@@ -43,184 +53,194 @@ const beginPrompts = () => {
           'delete a department',
           'delete an employee role',
           'delete an employee',
-          'exit program',
+          'exit program'
         ]
-
     }
-  ])
-    // end of question array //      
+ ])
+    // end start menu //      
 
-    .then((userInput) => {
-      let(inquirer.prompt) = userInput;
+ .then((input) => {
+    const {choices} = input;
 
+    if (choices === 'view departments') {
+       describeDepartments();
 
-      if (userInput === 'view departments') {
-        describeDepartments();
+    } 
+      if (choices === 'view existing employee roles') {
+      describeRoles();
 
-      } else if (userInput === 'view existing employee roles') {
-        describeRoles();
+    }  
+      if (choices === 'view all employees') {
+      describeEmployees();
 
-      } else if (userInput === 'view all employees') {
-        describeEmployees();
+    }  
+      if (choices === 'add a department') {
+      addDepartment();
 
-      } else if (userInput === 'add a department') {
-        addDepartment();
+    } 
+      if (choices === 'add a new employee role') {
+      addRole();
 
-      } else if (userInput === 'add a new employee role') {
-        addRole();
+    } 
+      if (choices === 'add a new employee') {
+      addEmployee();
 
-      } else if (userInput === 'add a new employee') {
-        addEmployee();
+    } 
+      if (choices === 'edit employee role') {
+      editRole();
 
-      } else if (userInput === 'edit employee role') {
-        editRole();
+    } 
+      if (choices === 'view / edit managers') {
+      editManager();
 
-      } else if (userInput === 'view / edit managers') {
-        editManager();
+    } 
+      if (choices === 'view employees in a specific department') {
+      describeDeptEmp();
 
-      } else if (userInput === 'view employees in a specific department') {
-        describeDeptEmp();
+    } 
+      if (choices === 'delete a department') {
+      deleteDepartment();
 
-      } else if (userInput === 'delete a department') {
-        deleteDepartment();
+    } 
+      if (choices === 'delete an employee role') {
+      deleteRole();
 
-      } else if (userInput === 'delete an employee role') {
-        deleteRole();
+    } 
+      if (choices === 'delete an employee') {
+      deleteEmployee();
 
-      } else if (userInput === 'delete an employee') {
-        deleteEmployee();
-
-      } else if (userInput === 'exit program') {
-      // connection.terminated() caused that weirdness at the top //
-        return connection.terminated()
-      };
-      console.log('Dueces!')
-
+    } 
+      if (choices === 'exit program') {
+      // Closing the connection is done using end() which makes sure all remaining queries are executed before sending a quit packet to the mysql server.
+      // https://stackoverflow.com/questions/20692989/node-mysql-where-does-connection-end-go
+      connection.end()
+    };
+      
     })
   }
     
     
-    describeDepartments = () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
-      }
+  // describeDepartments = () => {
+  //   console.log('something goes here');
+  //    // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
+  // }
 
-    describeRoles = () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // describeRoles = () => {
+  //   console.log('something goes here');
+  //   // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    describeEmployees = () => {
-      console.log('something goes here');
-    // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // describeEmployees = () => {
+  //   console.log('something goes here');
+  // // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    addDepartment = () => {
-      console.log('something goes here');
-    // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // addDepartment = () => {
+  //   console.log('something goes here');
+  // // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    addRole = () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // addRole = () => {
+  //   console.log('something goes here');
+  //   // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    addEmployee = () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // addEmployee = () => {
+  //   console.log('something goes here');
+  //  // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    editRole = () => {
-      console.log('something goes here');
-    // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // editRole = () => {
+  //   console.log('something goes here');
+  //   // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    editManager () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
-    }
+  // editManager () => {
+  //    console.log('something goes here');
+  //    // inquirer.prompt, const, (err), err, query, ETC.. //
+  //    console.table(results);
+  //    somethingGoesHereMaybe();
+  // }
 
-    describeDeptEmp () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // describeDeptEmp () => {
+  //   console.log('something goes here');
+  //    // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    deleteDepartment () => {
-      console.log('something goes here');
-     // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // deleteDepartment () => {
+  //   console.log('something goes here');
+  //   // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    deleteRole () => {
-      console.log('something goes here');
-      // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // deleteRole () => {
+  //   console.log('something goes here');
+  //   // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    deleteEmployee () => {
-      console.log('something goes here');
-      // inquirer.prompt, const, (err), err, query, ETC.. //
-      console.table(results);
-      somethingGoesHereMaybe();
+  // deleteEmployee () => {
+  //   console.log('something goes here');
+  //   // inquirer.prompt, const, (err), err, query, ETC.. //
+  //   console.table(results);
+  //   somethingGoesHereMaybe();
 
-    }
+  // }
 
-    wrapUpThisMess();
-   }
+  // wrapUpThisMess();
+  // }
 
 
 
-           // .then(userInput => {
+           // .then(choices => {
         //     // Selects the data sets for each employee class
 
-        //     let { first_name, last_name, roles_id, manager_id, buildEmployeeConfirm } = userInput; 
+        //     let { first_name, last_name, roles_id, manager_id, buildEmployeeConfirm } = choices; 
         //     let employee; 
 
         //     if (roles_id === "accountexec") {
         //         employee = new Engineer (first_name, last_name, roles_id, manager_id);
 
-        //      } else if (roles_id === "scientist") {
+        //      } if (roles_id === "scientist") {
         //         employee = new Intern (first_name, last_name, roles_id, manager_id);
 
-        //      } else if (roles_id === "accountant") {
+        //      } if (roles_id === "accountant") {
         //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
 
-        //      } else if (roles_id === "engineer") {
+        //      } if (roles_id === "engineer") {
         //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
 
-        //      } else if (roles_id === "attorney") {
+        //      } if (roles_id === "attorney") {
         //         employee = new Intern (first_name, last_name, roles_id, manager_id);   
 
-        //      } else if (roles_id === "recruiter") {
+        //      } if (roles_id === "recruiter") {
         //         employee = new Intern (first_name, last_name, roles_id, manager_id);  
         //      }
         //     
@@ -240,7 +260,7 @@ const beginPrompts = () => {
     //           if (err) {
     //             console.log(err);
     //             return;
-    //         } else {
+    //         } {
     //             console.log('Updated database, result "OK"')
     //         }
     //     })
