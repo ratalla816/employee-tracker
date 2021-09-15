@@ -19,19 +19,30 @@ const db = mysql.createConnection(
   );
 
  
-  // inquirer stuff goes here // -------------------------- //
-
-  // array of questions for user input*
+  
+  // begin inquirer questions //
  const beginPrompts = () => {
    inquirer.prompt ([
    {
-      type: "input",
-      name: "first_name",
-      message: "Please enter the manager's first name.",
-      choices: [
+      type: "list",
+      name: "start",
+      message: "Please select an option.",
+      choices: 
+      [
           'view departments',
-          'view roles',
-          'view employees',
+          'view a specific department',
+          'add a department',
+          'delete a department',
+          'view existing employee roles',
+          'view a specific employee role',
+          'add a new employee role',
+          'delete an employee role',
+          'view all employees',
+          'view a specific employee',
+          'add a new employee',
+          'delete an employee',
+          'view / edit managers',
+          'exit program',
       ]
   },    
 
