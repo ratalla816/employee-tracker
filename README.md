@@ -14,7 +14,7 @@
   
   ## Description
   
-   **AS A business owner**
+   **AS the CEO of Atalla Corporation**
    I WANT to be able to view and manage the departments, roles, and employees in my company
    SO THAT I can organize and plan my business.
 
@@ -41,37 +41,45 @@
   ## Table of Contents
   - [Description](#description)
   - [Documentation](#documentation)
-  - [Usage](#usage)
+  - [Walkthrough](#walkthrough)
   - [Screenshot](#screenshot)
   - [Features](#features)
   - [Acknowledgements](#acknowledgements)
   - [License](#license)
-  - [Testing](#testing)
   - [Contact](#contact)
 
   ## Documentation
-  press enter
+  Inquirer.js <https://www.npmjs.com/package/inquirer>
+  <br>
+  mysql2 <https://www.npmjs.com/package/mysql2>
  
-  ## Usage
-  use with caution
+  ## Walkthrough
+  <https://drive.google.com/file/d/1YHF9vuEZUVFQZuCOevGi-TopP8cfYLGo/view>
 
   ## Screenshot
   ![Screenshot](github/images/screenshot.png)
+  <br>
+  ![Screenshot](github/images/screenshot2.png)
 
   ## Features
-  blood, sweat, tears.
+  100% command line interface, myql2, inquirer.js
   
   # Acknowledgements
   Rob Atalla
+  <br>
+  Nathan Szurek (tutor)
+  <br>
+  Eric Stanulis (substitute instructor)
+  <br>
+  stackoverflow <https://stackoverflow.com/questions/20692989/node-mysql-where-does-connection-end-go>
+  <br>
+  tabnine <https://www.tabnine.com/code/javascript/functions/mysql/Connection/threadId>
+  <br>
+  KU Coding Bootcamp, Module 12 Challenge Assignment © 2021 Trilogy Education Services, LLC, a 2U, Inc. brand Confidential and Proprietary. All Rights Reserved.
     
   ## License
   ![badge](https://img.shields.io/badge/license-MIT-important)
   <br>
   Permission to use this application is granted under the MIT license. <https://opensource.org/licenses/MIT>
-
-
-  ## Testing
-  jest
-
   ## Contact:
   Holler at me! <a href="mailto:rob.atalla@robatalla816.com">rob.atalla@robatalla816.com</a>
