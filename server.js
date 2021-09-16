@@ -14,19 +14,14 @@ const connection = mysql.createConnection(
     password: 'root',
     database: 'atalla_corp_db'
   }
-  
-);
+ );
 
-  // https://www.tabnine.com/code/javascript/functions/mysql/Connection/threadId //
-  connection.connect(function(err) {
-    if (err) {
-     console.error('error connecting: ' + err.stack);
-     return;
-    }
-    console.log('connected as id ' + connection.threadId);
-    initiateApp();
-  });
-
+ // Credit -  https://www.mysqltutorial.org/mysql-nodejs/connect/ //
+ connection.connect(function(err) {
+  initiateApp();
+ });
+   
+  // If our connection is successful we should see this message
   initiateApp = () => {
     console.log('Welcome to the Atalla Corporation Employee Database')
     beginPrompts();
@@ -38,13 +33,14 @@ const beginPrompts = () => {
   inquirer.prompt([
     {
       type: 'list',
+      // *CHOICES up here...
       name: 'choices',
       message: 'Please select an option.',
       choices:
         [
           'view departments',
           'view list of active employees',
-          'add a department',
+          'add new department',
           'exit program'
         ]
     }
@@ -52,36 +48,30 @@ const beginPrompts = () => {
     // end start menu //      
 
  .then((userInput) => {
+       // *have to equal CHOICES down here // Credit - Eric Stanulis (Substitute Instructor)
     const {choices} = userInput;
 
-    if (choices === 'view departments') { 
-       describeDepartments();
+    if (choices === 'view departments') { describeDepartments(); }
+           
+    if (choices === 'view list of active employees') { describeEmployees(); }
 
-    } 
-    if (choices === 'view list of active employees') { 
-      describeEmployees();
-
-    }         
-     if (choices === 'add a department') { 
-      addDepartment();
-
-    }         
-     if (choices === 'exit program') {
+    if (choices === 'add new department') { newDepartment(); }         
+   
+    if (choices === 'exit program') {
       // Closing the connection is done using end() which makes sure all remaining queries are executed before sending a quit packet to the mysql server.
       // https://stackoverflow.com/questions/20692989/node-mysql-where-does-connection-end-go
-      connection.end()
-    };
+      connection.end() };
       
     })
   }
-    
-      // Credit - Eric Stanulis (Substitute Instructor)
- const describeDepartments = () => {
+                
+    const describeDepartments = () => {
     console.log('Displaying departments');
      const sql = `SELECT * FROM department`;
-     // Credit - Eric Stanulis (Substitute Instructor)
+     // connection.query Credit - Eric Stanulis (Substitute Instructor)
      connection.query(sql, (err, results) => {
       if (err) throw err;
+    // console.table instead of console.log Credit - Nathan Szurek (tutor)
     console.table(results);
     beginPrompts()
   });
@@ -97,7 +87,7 @@ const beginPrompts = () => {
   }); 
  };
 
-  addDepartment = () => { 
+  newDepartment = () => { 
     inquirer.prompt([
       {
         type: 'input',
@@ -114,11 +104,4 @@ const beginPrompts = () => {
         beginPrompts();
      }); 
    });
-  }; 
-   
- 
-
-
-
-      
-
+  };    

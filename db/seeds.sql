@@ -1,7 +1,5 @@
  
- 
- INSERT INTO department (name)
- VALUES
+ INSERT INTO department (name) VALUES
   ("executive"),
   ("sales"),
   ("research"),
@@ -10,8 +8,7 @@
   ("compliance"),
   ("hr");
 
- INSERT INTO roles (title, salary, department_id)
- VALUES
+ INSERT INTO roles (title, salary, department_id) VALUES
   ("manager", 100000000, 1),
   ("accountexec", 90000, 2),
   ("scientist", 200000, 3),
@@ -21,8 +18,7 @@
   ("recruiter", 40000, 7);
  
   
- INSERT INTO employees (first_name, last_name, roles_id, manager_id)
- VALUES
+ INSERT INTO employees (first_name, last_name, roles_id, manager_id) VALUES
   ("Rob", "Atalla", 1, NULL),
   ("Jack", "London", 2, NULL),
   ("Robert", "Bruce", 3, NULL),

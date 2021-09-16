@@ -2,10 +2,6 @@ DROP DATABASE IF EXISTS atalla_corp_db;
 CREATE DATABASE atalla_corp_db;
 USE atalla_corp_db;
 
---  DROP TABLE IF EXISTS department;
---  DROP TABLE IF EXISTS role;
---  DROP TABLE IF EXISTS employees;
-
   CREATE TABLE department(
   id INTEGER PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL
@@ -29,9 +25,6 @@ USE atalla_corp_db;
   FOREIGN KEY (manager_id) REFERENCES employees(id)
  );
 
--- CONSTRAINT fk_department
---  CONSTRAINT fk_roles
---  CONSTRAINT fk_manager
 
 
 

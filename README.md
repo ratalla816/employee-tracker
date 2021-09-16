@@ -73,7 +73,7 @@
   <br>
   stackoverflow <https://stackoverflow.com/questions/20692989/node-mysql-where-does-connection-end-go>
   <br>
-  tabnine <https://www.tabnine.com/code/javascript/functions/mysql/Connection/threadId>
+  mysqltutorial <https://www.mysqltutorial.org/mysql-nodejs/connect/>
   <br>
   KU Coding Bootcamp, Module 12 Challenge Assignment © 2021 Trilogy Education Services, LLC, a 2U, Inc. brand Confidential and Proprietary. All Rights Reserved.
     
