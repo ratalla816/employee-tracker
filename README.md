@@ -62,7 +62,7 @@
   ![Screenshot](github/images/screenshot2.png)
 
   ## Features
-  100% command line interface, myql2, inquirer.js
+  100% command line interface, mysql2, inquirer.js
   
   # Acknowledgements
   Rob Atalla
